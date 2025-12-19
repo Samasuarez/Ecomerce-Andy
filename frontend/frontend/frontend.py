@@ -1,12 +1,34 @@
 import reflex as rx
 
-
+from components.nav import navbar_searchbar
+from components.footer import footer
 
 class State(rx.State):
-    """The app state."""
+    cart: list[dict] = []
 
+    def add_to_cart(self, product: dict):
+        self.cart.append(product)
 
+    @rx.var
+    def cart_count(self) -> int:
+        return len(self.cart)
+def cart_list() -> rx.Component:
+    return rx.vstack(
+        rx.heading("Carrito", size="5"),
+        rx.foreach(
+            State.cart,
+            lambda product: rx.hstack(
+                rx.text(product["name"]),
+                rx.text(f"${product['price']:.2f}"),
+                justify="between",
+                width="100%",
+            ),
+        ),
+        spacing="3",
+        width="100%",
+    )
 
+       
 products = [
     {"id": 1, "name": "Camisa Azul", "price": 29.99, "image": "assets/shirt-blue.png"},
     {"id": 2, "name": "Pantalón Negro", "price": 49.99, "image": "assets/pants-black.png"},
@@ -38,30 +60,35 @@ def product_card(product: dict) -> rx.Component:
                 src=product["image"],
                 width="100%",
                 height="300px",
-                object_fit="cover"
+                object_fit="cover",
             ),
             side="top",
             pb="current",
         ),
-        rx.vstack(
-            rx.heading(product["name"], size="4"),
-            rx.text(f"${product['price']:.2f}", weight="bold"),
-            spacing="2",  # Esto separa el texto dentro de la card
-            padding="3",
-        ),
-        width="360px",
-    )
+      rx.vstack(
+    rx.heading(product["name"], size="4"),
+    rx.text(f"${product['price']:.2f}", weight="bold"),
+ rx.button(
+    "Agregar al carrito",
+    color_scheme="gray",
+    width="100%",
+    on_click=State.add_to_cart(product),
 
-def product_grid() -> rx.Component:
-    return rx.vstack(
-        # Aquí van las cards, usando la función product_card
-        *[product_card(product) for product in products],  # Asumiendo que tienes una lista de productos
-        spacing="4",  # Espacio entre las cards
-        padding="10px",  # Padding global para que las cards no queden pegadas a los bordes
-    )
 
-        
+),
+ 
+    spacing="2",
+    padding="3",
     
+),
+
+   
+       width="100%",
+    transition="all 0.2s ease",         
+    _hover={
+        "transform": "translateY(-4px)", 
+        "box_shadow": "0 10px 25px rgba(0,0,0,0.15)"},
+    )   
 
 rx.card(
     rx.link(
@@ -78,14 +105,35 @@ rx.card(
 )
 
 def index() -> rx.Component:
-    return rx.center(rx.grid(
-        *[product_card(product) for product in products],
-
-        columns="3",
-        spacing="4",
-
-    ))
+    return rx.vstack(
         
+        navbar_searchbar(),
+
+         rx.text(
+            "Productos en carrito: ",
+            rx.text(State.cart_count, as_="span", font_weight="bold"),
+            font_size="1.2em",
+        ),
+        rx.box(
+            rx.grid(
+                *[product_card(product) for product in products],
+                columns="repeat(4, 1fr)",
+                gap="2rem",
+                justify_items="center",
+            ),
+            max_width="1400px",
+            margin="0 auto",
+            padding_x="2em",
+            padding_y="4em",
+            width="100%",
+        ),
+        cart_list(),
+
+        footer(),
+        width="100%",
+        spacing="0",
+    )
+
    
     
 
