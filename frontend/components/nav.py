@@ -1,54 +1,43 @@
 import reflex as rx
+from state import State
 
 def navbar_searchbar() -> rx.Component:
     return rx.box(
         rx.desktop_only(
             rx.hstack(
                 rx.hstack(
-                    rx.image(
-                        src="/logo.jpg",
-                        width="2.25em",
-                        height="auto",
-                        border_radius="25%",
-                    ),
+                    rx.image(src="/logo.jpg", width="2.25em", border_radius="25%"),
                     rx.heading("Shop Andy", size="7", weight="bold"),
                     align_items="center",
                 ),
-                rx.input(
-                    rx.input.slot(rx.icon("search")),
-                    placeholder="Search...",
-                    type="search",
-                    size="2",
-                    justify="end",
-                ),
-                justify="between",
-                align_items="center",
-            ),
-        ),
-        rx.mobile_and_tablet(
-            rx.hstack(
+
                 rx.hstack(
-                    rx.image(
-                        src="/logo.jpg", width="2em", height="auto", border_radius="25%"
+                    rx.input(
+                        rx.input.slot(rx.icon("search")),
+                        placeholder="Search...",
+                        type="search",
+                        size="2",
                     ),
-                    rx.heading("Reflex", size="6", weight="bold"),
-                    align_items="center",
+                    rx.link(
+                        rx.button(
+                            rx.hstack(
+                                rx.icon("shopping-cart"),
+                                rx.text(State.cart_count),
+                                spacing="1",
+                            ),
+                            variant="soft",
+                            color_scheme="gray",
+                        ),
+                        href="/cart",
+                    ),
+                    spacing="3",
                 ),
-                rx.input(
-                    rx.input.slot(rx.icon("search")),
-                    placeholder="Search...",
-                    type="search",
-                    size="2",
-                    justify="end",
-                ),
+
                 justify="between",
-                align_items="center",
+                width="100%",
             ),
         ),
         bg=rx.color("accent", 3),
         padding="1em",
-        # position="fixed",
-        # top="0px",
-        # z_index="5",
         width="100%",
     )
