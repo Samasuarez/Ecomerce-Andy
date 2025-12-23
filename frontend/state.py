@@ -4,6 +4,12 @@ from data import PRODUCTS
 class State(rx.State):
     cart: list[dict] = []
 
+    # --- UI STATE (drawer mobile) ---
+    cart_drawer_open: bool = False
+
+    def toggle_cart_drawer(self, open: bool):
+        self.cart_drawer_open = open
+
     def add_to_cart(self, product_id: int):
         product = next(p for p in PRODUCTS if p["id"] == product_id)
 
@@ -21,7 +27,7 @@ class State(rx.State):
                 "qty": 1,
                 "total": product["price"],
             }
-        ),
+        )
 
     def increase_qty(self, product_id: int):
         for item in self.cart:

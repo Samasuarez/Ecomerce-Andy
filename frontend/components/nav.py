@@ -1,43 +1,60 @@
 import reflex as rx
 from state import State
+from pages.cart import cart_drawer
+
 
 def navbar_searchbar() -> rx.Component:
     return rx.box(
-        rx.desktop_only(
+        rx.hstack(
+            rx.heading("Shop", size="5"),
+            rx.spacer(),
+
+         
             rx.hstack(
-                rx.hstack(
-                    rx.image(src="/logo.jpg", width="2.25em", border_radius="25%"),
-                    rx.heading("Shop Andy", size="7", weight="bold"),
-                    align_items="center",
-                ),
-
-                rx.hstack(
-                    rx.input(
-                        rx.input.slot(rx.icon("search")),
-                        placeholder="Search...",
-                        type="search",
-                        size="2",
-                    ),
-                    rx.link(
-                        rx.button(
-                            rx.hstack(
-                                rx.icon("shopping-cart"),
-                                rx.text(State.cart_count),
-                                spacing="1",
+                rx.link("Inicio", href="/"),
+                rx.link(
+                    rx.hstack(
+                        rx.text("Carrito"),
+                        rx.cond(
+                            State.cart_count > 0,
+                            rx.badge(
+                                State.cart_count,
+                                color_scheme="red",
+                                radius="full",
                             ),
-                            variant="soft",
-                            color_scheme="gray",
                         ),
-                        href="/cart",
+                        spacing="1",
+                        align="center",
                     ),
-                    spacing="3",
+                    href="/cart",
                 ),
-
-                justify="between",
-                width="100%",
+                spacing="4",
+                display=["none", "flex"],
             ),
+
+            rx.hstack(
+                cart_drawer(), 
+                rx.menu.root(
+                    rx.menu.trigger(
+                        rx.icon_button(
+                            rx.icon("menu"),
+                            variant="ghost",
+                        )
+                    ),
+                    rx.menu.content(
+                        rx.menu.item("Inicio", on_click=rx.redirect("/")),
+                        rx.menu.item("Carrito", on_click=rx.redirect("/cart")),
+                    ),
+                ),
+                spacing="2",
+                display=["flex", "none"],
+            ),
+
+            width="100%",
+            align="center",
         ),
-        bg=rx.color("accent", 3),
-        padding="1em",
+        padding=["1em", "1.5em", "2em"],
+        border_bottom="1px solid #eee",
         width="100%",
     )
+
