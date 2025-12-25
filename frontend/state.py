@@ -4,7 +4,7 @@ from data import PRODUCTS
 class State(rx.State):
     cart: list[dict] = []
 
-    # --- UI STATE (drawer mobile) ---
+   
     cart_drawer_open: bool = False
 
     def toggle_cart_drawer(self, open: bool):
@@ -45,6 +45,34 @@ class State(rx.State):
                 else:
                     self.cart.remove(item)
                 return
+    
+
+    login_email: str = ""
+    login_password: str = ""
+    is_logged_in: bool = False
+    user_email: str = ""
+
+    def set_login_email(self, value: str):
+        self.login_email = value
+
+    def set_login_password(self, value: str):
+        self.login_password = value
+
+    def login(self):
+        # fake auth
+        if self.login_email:
+            self.is_logged_in = True
+            self.user_email = self.login_email
+            self.login_email = ""
+            self.login_password = ""
+
+            # 👇 REDIRECT
+            return rx.redirect("/")
+
+    def logout(self):
+        self.is_logged_in = False
+        self.user_email = ""
+
 
     @rx.var
     def cart_count(self) -> int:

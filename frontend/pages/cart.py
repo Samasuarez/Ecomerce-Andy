@@ -67,30 +67,48 @@ def cart_item(item: dict) -> rx.Component:
 
 
 def cart() -> rx.Component:
-    return rx.center(                 
-        rx.container(
-            rx.vstack(
-                rx.heading("🛒 Carrito", size="6"),
-                rx.foreach(State.cart, cart_item),
-                rx.divider(),
-                rx.hstack(
-                    rx.text("Total", size="4"),
-                    rx.text(
-                        f"${State.cart_total:.2f}",
-                        size="4",
-                        font_weight="bold",
+    return rx.box(
+        rx.cond(
+            State.is_logged_in,
+
+    
+            rx.center(
+                rx.container(
+                    rx.vstack(
+                        rx.heading("🛒 Carrito", size="6"),
+                        rx.foreach(State.cart, cart_item),
+                        rx.divider(),
+                        rx.hstack(
+                            rx.text("Total", size="4"),
+                            rx.text(
+                                f"${State.cart_total:.2f}",
+                                size="4",
+                                font_weight="bold",
+                            ),
+                            justify="between",
+                            width="100%",
+                        ),
+                        spacing="4",
+                        width="100%",
                     ),
-                    justify="between",
-                    width="100%",
+                    max_width="800px",
+                    padding="2em",
                 ),
-                spacing="4",
                 width="100%",
             ),
-            max_width="800px",
-            padding="2em",
+
+            
+            rx.box(),
         ),
-        width="100%",
+
+       
+        on_mount=rx.cond(
+            ~State.is_logged_in,
+            rx.redirect("/login"),
+            None,
+        ),
     )
+
     
 def cart_drawer() -> rx.Component:
     return rx.drawer.root(

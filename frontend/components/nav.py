@@ -9,31 +9,45 @@ def navbar_searchbar() -> rx.Component:
             rx.heading("Shop", size="5"),
             rx.spacer(),
 
-         
             rx.hstack(
                 rx.link("Inicio", href="/"),
-                rx.link(
-                    rx.hstack(
-                        rx.text("Carrito"),
-                        rx.cond(
-                            State.cart_count > 0,
-                            rx.badge(
-                                State.cart_count,
-                                color_scheme="red",
-                                radius="full",
-                            ),
+
+               
+                rx.cond(
+                    State.is_logged_in,
+
+                  
+                    rx.menu.root(
+                        rx.menu.trigger(
+                            rx.button(
+                                State.user_email,
+                                variant="ghost",
+                                size="2",
+                            )
                         ),
-                        spacing="1",
-                        align="center",
-                    ),
-                    href="/cart",
+                        rx.menu.content(
+    rx.menu.item(
+        "Perfil",
+        on_click=rx.redirect("/profile"),
+    ),
+    rx.menu.item(
+        "Cerrar sesión",
+        on_click=State.logout,
+    ),
+),
+  ),
+
+                    rx.link("Login", href="/login"),
                 ),
+
+                rx.link("Carrito", href="/cart"),
                 spacing="4",
+                align="center",
                 display=["none", "flex"],
             ),
 
             rx.hstack(
-                cart_drawer(), 
+                cart_drawer(),
                 rx.menu.root(
                     rx.menu.trigger(
                         rx.icon_button(
@@ -43,6 +57,17 @@ def navbar_searchbar() -> rx.Component:
                     ),
                     rx.menu.content(
                         rx.menu.item("Inicio", on_click=rx.redirect("/")),
+                        rx.cond(
+                            State.is_logged_in,
+                            rx.menu.item(
+                                "Cerrar sesión",
+                                on_click=State.logout,
+                            ),
+                            rx.menu.item(
+                                "Login",
+                                on_click=rx.redirect("/login"),
+                            ),
+                        ),
                         rx.menu.item("Carrito", on_click=rx.redirect("/cart")),
                     ),
                 ),
