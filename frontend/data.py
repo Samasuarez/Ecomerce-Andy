@@ -23,5 +23,101 @@ PRODUCTS = [
         "price": 79.99,
         "image": "assets/shoes-sports.png",
     },
-    # seguí hasta 20
+    {
+        "id": 5,
+        "name": "Buzo Gris",
+        "price": 39.99,
+        "image": "assets/hoodie-gray.png",
+    },
+    {
+        "id": 6,
+        "name": "Remera Blanca",
+        "price": 19.99,
+        "image": "assets/tshirt-white.png",
+    },
+    {
+        "id": 7,
+        "name": "Campera Negra",
+        "price": 89.99,
+        "image": "assets/jacket-black.png",
+    },
+    {
+        "id": 8,
+        "name": "Short Deportivo",
+        "price": 24.99,
+        "image": "assets/short-sport.png",
+    },
+    {
+        "id": 9,
+        "name": "Mochila Urbana",
+        "price": 59.99,
+        "image": "assets/backpack.png",
+    },
+    {
+        "id": 10,
+        "name": "Reloj Digital",
+        "price": 45.00,
+        "image": "assets/watch-digital.png",
+    },
+    {
+        "id": 11,
+        "name": "Medias Deportivas",
+        "price": 9.99,
+        "image": "assets/socks-sport.png",
+    },
+    {
+        "id": 12,
+        "name": "Cinturón de Cuero",
+        "price": 22.50,
+        "image": "assets/belt-leather.png",
+    },
+    {
+        "id": 13,
+        "name": "Lentes de Sol",
+        "price": 34.99,
+        "image": "assets/sunglasses.png",
+    },
+    {
+        "id": 14,
+        "name": "Camisa Blanca",
+        "price": 31.99,
+        "image": "assets/shirt-white.png",
+    },
+    {
+        "id": 15,
+        "name": "Jean Azul",
+        "price": 54.99,
+        "image": "assets/jeans-blue.png",
+    },
+    {
+        "id": 16,
+        "name": "Zapatillas Urbanas",
+        "price": 74.99,
+        "image": "assets/sneakers-urban.png",
+    },
+    {
+        "id": 17,
+        "name": "Bufanda",
+        "price": 18.00,
+        "image": "assets/scarf.png",
+    },
+    {
+        "id": 18,
+        "name": "Gorro de Lana",
+        "price": 14.50,
+        "image": "assets/beanie.png",
+    },
+    {
+        "id": 19,
+        "name": "Campera Denim",
+        "price": 92.00,
+        "image": "assets/jacket-denim.png",
+    },
+    {
+        "id": 20,
+        "name": "Bolso Deportivo",
+        "price": 64.99,
+        "image": "assets/sport-bag.png",
+    },
 ]
+

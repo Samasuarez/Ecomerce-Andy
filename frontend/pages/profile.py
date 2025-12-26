@@ -1,47 +1,23 @@
 import reflex as rx
 from state import State
-from components.nav import navbar_searchbar
-from components.footer import footer
-
+from components.layout import layout
 
 def profile() -> rx.Component:
-    return rx.vstack(
-        navbar_searchbar(),
-
+    return layout(
         rx.center(
-            rx.container(
+            rx.card(
                 rx.vstack(
                     rx.heading("Mi perfil", size="6"),
-
-                    rx.text(
-                        f"Email: {State.user_email}",
-                        color="gray",
-                    ),
-
-                    rx.divider(),
-
-                    rx.input(
-                        placeholder="Nombre",
-                        width="100%",
-                    ),
-                    rx.input(
-                        placeholder="Apellido",
-                        width="100%",
-                    ),
-
-                    rx.button(
-                        "Guardar cambios",
-                        width="100%",
-                    ),
-
+                    rx.text(f"Email: {State.user_email}"),
+                    rx.input(placeholder="Nombre"),
+                    rx.input(placeholder="Apellido"),
+                    rx.button("Guardar"),
                     spacing="4",
                 ),
-                max_width="480px",
                 padding="2em",
-            ),
-        ),
-
-        footer(),
-        width="100%",
-        spacing="0",
+                max_width="400px",
+                width="100%",
+            )
+        )
     )
+

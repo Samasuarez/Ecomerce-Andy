@@ -3,9 +3,9 @@ from data import PRODUCTS
 
 class State(rx.State):
     cart: list[dict] = []
-
-   
+    dark_mode: bool = False
     cart_drawer_open: bool = False
+
 
     def toggle_cart_drawer(self, open: bool):
         self.cart_drawer_open = open
