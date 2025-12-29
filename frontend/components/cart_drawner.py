@@ -10,11 +10,9 @@ def cart_drawer() -> rx.Component:
                 variant="ghost",
             )
         ),
-
         rx.drawer.content(
             rx.vstack(
                 rx.heading("Tu carrito", size="5"),
-
                 rx.cond(
                     State.cart_count == 0,
                     rx.text("Tu carrito está vacío 🛍️"),
@@ -32,13 +30,11 @@ def cart_drawer() -> rx.Component:
                         spacing="3",
                     ),
                 ),
-
                 spacing="4",
                 padding="1em",
             ),
             width=["100%", "420px"],
         ),
-
         open=State.cart_drawer_open,
         on_open_change=State.toggle_cart_drawer,
     )

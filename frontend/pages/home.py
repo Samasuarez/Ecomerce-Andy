@@ -10,7 +10,7 @@ def hero_section() -> rx.Component:
         rx.center(
             rx.vstack(
                 rx.heading(
-                    "Bienvenida a Shop",
+                    "Bienvenidos a Shop Andy",
                     size="8",
                     text_align="center",
                 ),

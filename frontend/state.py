@@ -1,3 +1,4 @@
+from dataclasses import field
 import reflex as rx
 from data import PRODUCTS
 
@@ -5,8 +6,15 @@ class State(rx.State):
     cart: list[dict] = []
     dark_mode: bool = False
     cart_drawer_open: bool = False
+    profile_completed: bool = False
+    editing_field: str | None = None
+    first_name: str = ""
+    last_name: str = ""
+    address: str = ""
+    phone: str = ""
+    editing_field: str | None = None
 
-
+    
     def toggle_cart_drawer(self, open: bool):
         self.cart_drawer_open = open
 
@@ -59,20 +67,39 @@ class State(rx.State):
         self.login_password = value
 
     def login(self):
-        # fake auth
+
         if self.login_email:
             self.is_logged_in = True
             self.user_email = self.login_email
             self.login_email = ""
             self.login_password = ""
-
-            # 👇 REDIRECT
             return rx.redirect("/")
 
     def logout(self):
         self.is_logged_in = False
         self.user_email = ""
+        
+    def save_profile(self):
+     self.profile_completed = True
 
+
+    def set_first_name(self, value: str):
+        self.first_name = value
+
+    def set_last_name(self, value: str):
+        self.last_name = value
+
+    def set_phone(self, value: str):
+        self.phone = value
+
+    def set_address(self, value: str):
+        self.address = value
+ 
+    def start_edit(self, field: str):
+     self.editing_field = field
+
+    def stop_edit(self):
+        self.editing_field = ""
 
     @rx.var
     def cart_count(self) -> int:

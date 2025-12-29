@@ -65,12 +65,6 @@ def cart_item(item: dict) -> rx.Component:
         transition="background-color 0.2s ease",
         _hover={"backgroundColor": "#fafafa"},
     )
-
-
-
-
-from components.layout import layout
-
 def cart() -> rx.Component:
     return layout(
         rx.box(
