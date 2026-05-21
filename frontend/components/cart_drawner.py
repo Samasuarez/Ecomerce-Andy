@@ -3,40 +3,20 @@ from ..state import State
 
 
 def cart_drawer() -> rx.Component:
-    return rx.drawer.root(
-        rx.drawer.trigger(
-            rx.icon_button(
-                rx.icon("shopping-cart"),
-                variant="ghost",
-            )
-        ),
-        rx.drawer.content(
-            rx.vstack(
-                rx.heading("Tu carrito", size="5"),
-                rx.cond(
-                    State.cart_count == 0,
-                    rx.text("Tu carrito está vacío 🛍️"),
-                    rx.vstack(
-                        rx.text("Productos: ", State.cart_count),
-                        rx.text(
-                            "Total: ", State.cart_total_fmt,
-                            font_weight="bold",
-                        ),
-                        rx.button(
-                            "Ver carrito",
-                            on_click=rx.redirect("/cart"),
-                            width="100%",
-                        ),
-                        spacing="3",
-                    ),
+    return rx.link(
+        rx.hstack(
+            rx.icon("shopping-cart", color="white", size=22),
+            rx.cond(
+                State.cart_count > 0,
+                rx.badge(
+                    State.cart_count,
+                    color_scheme="red",
+                    radius="full",
+                    font_size="0.7rem",
                 ),
-                spacing="4",
-                padding="1em",
             ),
-            width=["100%", "420px"],
+            spacing="1",
+            align="center",
         ),
-        open=State.cart_drawer_open,
-        on_open_change=State.toggle_cart_drawer,
+        href="/cart",
     )
-
-
