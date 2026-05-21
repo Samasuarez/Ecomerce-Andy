@@ -1,5 +1,5 @@
 import reflex as rx
-from state import State
+from ..state import State
 
 
 def cart_drawer() -> rx.Component:
@@ -17,9 +17,9 @@ def cart_drawer() -> rx.Component:
                     State.cart_count == 0,
                     rx.text("Tu carrito está vacío 🛍️"),
                     rx.vstack(
-                        rx.text(f"Productos: {State.cart_count}"),
+                        rx.text("Productos: ", State.cart_count),
                         rx.text(
-                            f"Total: ${State.cart_total:.2f}",
+                            "Total: ", State.cart_total_fmt,
                             font_weight="bold",
                         ),
                         rx.button(

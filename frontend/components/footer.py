@@ -1,99 +1,77 @@
 import reflex as rx
-
-def footer_item(text: str, href: str) -> rx.Component:
-    return rx.link(rx.text(text, size="3"), href=href)
+from ..state import State
 
 
-def footer_items_1() -> rx.Component:
-    return rx.flex(
-        rx.heading("PRODUCTS", size="4", weight="bold", as_="h3"),
-        footer_item("Web Design", "/#"),
-        footer_item("Web Development", "/#"),
-        footer_item("E-commerce", "/#"),
-        footer_item("Content Management", "/#"),
-        footer_item("Mobile Apps", "/#"),
-        spacing="4",
-        text_align=["center", "center", "start"],
-        flex_direction="column",
-    )
-
-
-def footer_items_2() -> rx.Component:
-    return rx.flex(
-        rx.heading("RESOURCES", size="4", weight="bold", as_="h3"),
-        footer_item("Blog", "/#"),
-        footer_item("Case Studies", "/#"),
-        footer_item("Whitepapers", "/#"),
-        footer_item("Webinars", "/#"),
-        footer_item("E-books", "/#"),
-        spacing="4",
-        text_align=["center", "center", "start"],
-        flex_direction="column",
-    )
-
-
-def social_link(icon: str, href: str) -> rx.Component:
-    return rx.link(rx.icon(icon), href=href)
-
-
-def socials() -> rx.Component:
-    return rx.flex(
-        social_link("instagram", "/#"),
-        social_link("twitter", "/#"),
-        social_link("facebook", "/#"),
-        social_link("linkedin", "/#"),
-        spacing="3",
-        justify="end",
-        width="100%",
-    )
+def _link(text: str, href: str) -> rx.Component:
+    return rx.link(text, href=href, color="#94A3B8", font_size="0.85rem",
+                   _hover={"color": "white"})
 
 
 def footer() -> rx.Component:
-    return rx.el.footer(
-        rx.vstack(
-            rx.flex(
+    return rx.box(
+        rx.box(
+            rx.hstack(
+                # Marca
                 rx.vstack(
                     rx.hstack(
-                        rx.image(
-                            src="/logo.jpg",
-                            width="2.25em",
-                            height="auto",
-                            border_radius="25%",
-                        ),
-                        rx.heading("Reflex", size="7", weight="bold"),
-                        align_items="center",
+                        rx.icon("cross", color="#60A5FA", size=20),
+                        rx.text("NurseShop", color="white", font_weight="800", font_size="1.2rem"),
+                        spacing="2", align="center",
                     ),
-                    rx.text(
-                        "© 2024 Reflex, Inc",
-                        size="3",
-                        white_space="nowrap",
-                        weight="medium",
-                    ),
-                    spacing="4",
-                    align_items=["center", "center", "start"],
+                    rx.text("Tu tienda de confianza en\ninsumos y uniformes clínicos.",
+                            color="#94A3B8", font_size="0.85rem", white_space="pre-line"),
+                    spacing="3", align_items="start",
                 ),
-                footer_items_1(),
-                footer_items_2(),
+
+                # Categorías
+                rx.vstack(
+                    rx.text("PRODUCTOS", color="white", font_weight="700", font_size="0.85rem"),
+                    _link("Ambos", "/products"),
+                    _link("Calzado Clínico", "/products"),
+                    _link("Accesorios", "/products"),
+                    _link("Equipamiento", "/products"),
+                    _link("Descartables", "/products"),
+                    spacing="2", align_items="start",
+                ),
+
+                # Ayuda
+                rx.vstack(
+                    rx.text("MI CUENTA", color="white", font_weight="700", font_size="0.85rem"),
+                    _link("Iniciar sesión", "/login"),
+                    _link("Mi perfil", "/profile"),
+                    _link("Mis pedidos", "/profile"),
+                    _link("Mi carrito", "/cart"),
+                    rx.cond(
+                        State.is_admin,
+                        _link("Panel Admin", "/admin"),
+                    ),
+                    spacing="2", align_items="start",
+                ),
+
                 justify="between",
+                width="100%",
+                flex_wrap="wrap",
                 spacing="6",
-                flex_direction=["column", "column", "row"],
-                width="100%",
             ),
-            rx.divider(),
+            rx.divider(border_color="#334155", margin_y="1.5em"),
             rx.hstack(
+                rx.text("© 2024 NurseShop — Todos los derechos reservados.",
+                        color="#64748B", font_size="0.8rem"),
                 rx.hstack(
-                    footer_item("Privacy Policy", "/#"),
-                    footer_item("Terms of Service", "/#"),
+                    rx.link("Instagram", href="/#", color="#64748B", font_size="0.8rem",
+                            _hover={"color": "white"}),
+                    rx.link("Facebook", href="/#", color="#64748B", font_size="0.8rem",
+                            _hover={"color": "white"}),
                     spacing="4",
-                    align="center",
-                    width="100%",
                 ),
-                socials(),
                 justify="between",
                 width="100%",
+                flex_wrap="wrap",
             ),
-            spacing="5",
-            width="100%",
+            max_width="1280px",
+            margin="0 auto",
+            padding="2em 1.5em",
         ),
+        background="#0F172A",
         width="100%",
     )

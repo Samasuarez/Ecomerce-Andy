@@ -1,5 +1,5 @@
 import reflex as rx
-from state import State
+from ..state import State
 
 def profile_field(label: str, value: str, setter, field_key: str) -> rx.Component:
     return rx.hstack(
