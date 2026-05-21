@@ -1,0 +1,30 @@
+services:
+  # ── Backend FastAPI ────────────────────────────────────────────────────── #
+  - type: web
+    name: nurseshop-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGODB_URI
+        sync: false        # Cargar manualmente en Render dashboard
+      - key: JWT_SECRET
+        sync: false
+      - key: DB_NAME
+        value: ecommerce
+      - key: ALLOWED_ORIGINS
+        sync: false        # Ej: https://nurseshop-frontend.onrender.com
+
+  # ── Frontend Reflex ────────────────────────────────────────────────────── #
+  - type: web
+    name: nurseshop-frontend
+    runtime: python
+    rootDir: .
+    buildCommand: pip install -r requirements.txt && reflex init
+    startCommand: reflex run --env prod
+    envVars:
+      - key: API_URL
+        sync: false        # URL del nurseshop-api en Render, ej: https://nurseshop-api.onrender.com
+      - key: PORT
+        value: "8000"

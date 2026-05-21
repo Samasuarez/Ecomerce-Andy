@@ -1,7 +1,8 @@
 import reflex as rx
 import httpx
+import os
 
-API_URL = "http://localhost:8002"
+API_URL = os.environ.get("API_URL", "http://localhost:8002")
 
 CATEGORIES = {
     "ambos": "Ambos",

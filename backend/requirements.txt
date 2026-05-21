@@ -1,7 +1,7 @@
 fastapi==0.136.1
-uvicorn
-motor[srv]
+uvicorn==0.46.0
+motor[srv]==3.7.1
 pymongo[srv]
 python-jose[cryptography]
-passlib[bcrypt]
-python-dotenv
+bcrypt==5.0.0
+python-dotenv==1.2.2
