@@ -21,7 +21,6 @@ STATUS_FILTERS = [
 ]
 
 CAT_LABELS = [label for _, label in CATS]
-CAT_VALUES = [slug for slug, _ in CATS]
 
 
 # ── Dashboard ─────────────────────────────────────────────────────────────── #
@@ -30,20 +29,20 @@ def stat_card(title: str, value, icon: str, color: str) -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.hstack(
-                rx.text(title, color="#64748B", font_size="0.82rem", font_weight="600"),
+                rx.text(title, color="#1E293B", font_size="0.85rem", font_weight="700"),
                 rx.icon(icon, size=18, color=color),
                 justify="between",
                 width="100%",
             ),
-            rx.text(value, font_size="1.8rem", font_weight="700", color="#1E293B"),
+            rx.text(value, font_size="1.8rem", font_weight="700", color="#0F172A"),
             spacing="2",
             width="100%",
         ),
         background="white",
-        border="1px solid #E2E8F0",
+        border="1px solid #CBD5E1",
         border_radius="12px",
         padding="1.25em 1.5em",
-        border_top=f"3px solid {color}",
+        border_top=f"4px solid {color}",
     )
 
 
@@ -65,48 +64,56 @@ def dashboard_tab() -> rx.Component:
 
 # ── Productos ─────────────────────────────────────────────────────────────── #
 
+def _label(text: str) -> rx.Component:
+    return rx.text(text, font_size="0.85rem", font_weight="700", color="#0F172A")
+
+
 def new_product_form() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.hstack(
-                rx.text("Nuevo producto", font_weight="700", font_size="1rem", color="#1E293B"),
+                rx.text("Nuevo producto", font_weight="800", font_size="1.05rem", color="#0F172A"),
                 rx.button(
                     "✕ Cerrar",
                     on_click=State.toggle_product_form,
                     size="1",
-                    variant="ghost",
-                    color="#64748B",
+                    background="#E2E8F0",
+                    color="#1E293B",
+                    border_radius="6px",
+                    cursor="pointer",
                 ),
                 justify="between",
                 width="100%",
             ),
             rx.grid(
                 rx.vstack(
-                    rx.text("Nombre *", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Nombre *"),
                     rx.input(
                         value=State.np_name,
                         on_change=State.set_np_name,
                         placeholder="Ej: Ambo Clínico Premium",
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Precio ($) *", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Precio ($) *"),
                     rx.input(
                         value=State.np_price,
                         on_change=State.set_np_price,
                         placeholder="Ej: 29.99",
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Categoría", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Categoría"),
                     rx.select(
                         CAT_LABELS,
                         on_change=State.set_np_category,
@@ -115,14 +122,15 @@ def new_product_form() -> rx.Component:
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Stock", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Stock"),
                     rx.input(
                         value=State.np_stock,
                         on_change=State.set_np_stock,
                         placeholder="0",
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
@@ -130,14 +138,15 @@ def new_product_form() -> rx.Component:
                 gap="3",
             ),
             rx.vstack(
-                rx.text("Descripción *", font_size="0.8rem", font_weight="600", color="#374151"),
+                _label("Descripción *"),
                 rx.text_area(
                     value=State.np_description,
                     on_change=State.set_np_description,
                     placeholder="Descripción del producto",
                     width="100%",
-                    border="1.5px solid #CBD5E1",
+                    border="2px solid #94A3B8",
                     border_radius="6px",
+                    color="#0F172A",
                     rows="3",
                 ),
                 spacing="1",
@@ -145,26 +154,28 @@ def new_product_form() -> rx.Component:
             ),
             rx.grid(
                 rx.vstack(
-                    rx.text("Talles (separados por coma)", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Talles (separados por coma)"),
                     rx.input(
                         value=State.np_sizes,
                         on_change=State.set_np_sizes,
                         placeholder="S,M,L,XL",
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("URL imagen (opcional)", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("URL imagen (opcional)"),
                     rx.input(
                         value=State.np_image,
                         on_change=State.set_np_image,
                         placeholder="https://...",
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
@@ -174,11 +185,11 @@ def new_product_form() -> rx.Component:
             rx.cond(
                 State.product_form_error != "",
                 rx.box(
-                    rx.text(State.product_form_error, color="#DC2626", font_size="0.85rem"),
+                    rx.text(State.product_form_error, color="#DC2626", font_size="0.9rem", font_weight="600"),
                     background="#FEF2F2",
-                    padding="0.5em 0.75em",
+                    padding="0.6em 0.85em",
                     border_radius="6px",
-                    border="1px solid #FECACA",
+                    border="1.5px solid #FCA5A5",
                     width="100%",
                 ),
                 rx.box(),
@@ -189,15 +200,21 @@ def new_product_form() -> rx.Component:
                     on_click=State.admin_create_product,
                     background="#2563EB",
                     color="white",
-                    border_radius="6px",
+                    border_radius="8px",
                     size="3",
-                    font_weight="600",
+                    font_weight="700",
+                    cursor="pointer",
+                    _hover={"background": "#1D4ED8"},
                 ),
                 rx.button(
                     "Cancelar",
                     on_click=State.toggle_product_form,
-                    variant="ghost",
-                    border_radius="6px",
+                    background="#F1F5F9",
+                    color="#1E293B",
+                    border_radius="8px",
+                    size="3",
+                    font_weight="600",
+                    cursor="pointer",
                 ),
                 spacing="3",
             ),
@@ -205,7 +222,7 @@ def new_product_form() -> rx.Component:
             width="100%",
         ),
         background="#EFF6FF",
-        border="2px solid #93C5FD",
+        border="2px solid #3B82F6",
         border_radius="12px",
         padding="1.5em",
         width="100%",
@@ -216,53 +233,58 @@ def edit_product_form() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.hstack(
-                rx.text("✏️ Editar producto", font_weight="700", font_size="1rem", color="#1E293B"),
+                rx.text("Editar producto", font_weight="800", font_size="1.05rem", color="#0F172A"),
                 rx.button(
                     "✕ Cerrar",
                     on_click=State.admin_cancel_edit_product,
                     size="1",
-                    variant="ghost",
-                    color="#64748B",
+                    background="#E2E8F0",
+                    color="#1E293B",
+                    border_radius="6px",
+                    cursor="pointer",
                 ),
                 justify="between",
                 width="100%",
             ),
             rx.grid(
                 rx.vstack(
-                    rx.text("Nombre", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Nombre"),
                     rx.input(
                         value=State.ep_name,
                         on_change=State.set_ep_name,
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Precio ($)", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Precio ($)"),
                     rx.input(
                         value=State.ep_price,
                         on_change=State.set_ep_price,
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Stock", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Stock"),
                     rx.input(
                         value=State.ep_stock,
                         on_change=State.set_ep_stock,
-                        border="1.5px solid #CBD5E1",
+                        border="2px solid #94A3B8",
                         border_radius="6px",
                         background="white",
+                        color="#0F172A",
                     ),
                     spacing="1",
                 ),
                 rx.vstack(
-                    rx.text("Categoría", font_size="0.8rem", font_weight="600", color="#374151"),
+                    _label("Categoría"),
                     rx.select(
                         CAT_LABELS,
                         on_change=State.set_ep_category,
@@ -274,26 +296,28 @@ def edit_product_form() -> rx.Component:
                 gap="3",
             ),
             rx.vstack(
-                rx.text("Descripción", font_size="0.8rem", font_weight="600", color="#374151"),
+                _label("Descripción"),
                 rx.text_area(
                     value=State.ep_description,
                     on_change=State.set_ep_description,
                     width="100%",
-                    border="1.5px solid #CBD5E1",
+                    border="2px solid #94A3B8",
                     border_radius="6px",
+                    color="#0F172A",
                     rows="3",
                 ),
                 spacing="1",
                 width="100%",
             ),
             rx.vstack(
-                rx.text("Talles (separados por coma)", font_size="0.8rem", font_weight="600", color="#374151"),
+                _label("Talles (separados por coma)"),
                 rx.input(
                     value=State.ep_sizes,
                     on_change=State.set_ep_sizes,
-                    border="1.5px solid #CBD5E1",
+                    border="2px solid #94A3B8",
                     border_radius="6px",
                     background="white",
+                    color="#0F172A",
                 ),
                 spacing="1",
                 width="100%",
@@ -301,10 +325,11 @@ def edit_product_form() -> rx.Component:
             rx.cond(
                 State.edit_form_error != "",
                 rx.box(
-                    rx.text(State.edit_form_error, color="#DC2626", font_size="0.85rem"),
+                    rx.text(State.edit_form_error, color="#DC2626", font_size="0.9rem", font_weight="600"),
                     background="#FEF2F2",
-                    padding="0.5em 0.75em",
+                    padding="0.6em 0.85em",
                     border_radius="6px",
+                    border="1.5px solid #FCA5A5",
                     width="100%",
                 ),
                 rx.box(),
@@ -315,15 +340,21 @@ def edit_product_form() -> rx.Component:
                     on_click=State.admin_save_edit_product,
                     background="#16A34A",
                     color="white",
-                    border_radius="6px",
+                    border_radius="8px",
                     size="3",
-                    font_weight="600",
+                    font_weight="700",
+                    cursor="pointer",
+                    _hover={"background": "#15803D"},
                 ),
                 rx.button(
                     "Cancelar",
                     on_click=State.admin_cancel_edit_product,
-                    variant="ghost",
-                    border_radius="6px",
+                    background="#F1F5F9",
+                    color="#1E293B",
+                    border_radius="8px",
+                    size="3",
+                    font_weight="600",
+                    cursor="pointer",
                 ),
                 spacing="3",
             ),
@@ -331,7 +362,7 @@ def edit_product_form() -> rx.Component:
             width="100%",
         ),
         background="#F0FDF4",
-        border="2px solid #86EFAC",
+        border="2px solid #22C55E",
         border_radius="12px",
         padding="1.5em",
         width="100%",
@@ -341,37 +372,53 @@ def edit_product_form() -> rx.Component:
 def admin_product_row(product: dict) -> rx.Component:
     return rx.table.row(
         rx.table.cell(
-            rx.text(product["id"], font_size="0.78rem", color="#94A3B8"),
+            rx.text(product["id"], font_size="0.8rem", color="#475569", font_weight="500"),
         ),
         rx.table.cell(
             rx.vstack(
-                rx.text(product["name"], font_weight="600", font_size="0.88rem"),
-                rx.text(product["category"], font_size="0.72rem", color="#94A3B8"),
+                rx.text(product["name"], font_weight="700", font_size="0.9rem", color="#0F172A"),
+                rx.text(product["category"], font_size="0.75rem", color="#475569", font_weight="500"),
                 spacing="0",
                 align="start",
             ),
         ),
         rx.table.cell(
-            rx.text("$", product["price"], font_weight="700", color="#2563EB"),
+            rx.text("$ ", product["price"], font_weight="700", color="#1D4ED8", font_size="0.9rem"),
         ),
         rx.table.cell(
-            rx.badge(product["stock"], color_scheme="blue", radius="full"),
+            rx.badge(
+                product["stock"],
+                background="#DBEAFE",
+                color="#1E40AF",
+                radius="full",
+                font_weight="700",
+                font_size="0.8rem",
+                padding_x="0.6em",
+            ),
         ),
         rx.table.cell(
             rx.hstack(
                 rx.button(
-                    "Editar",
+                    "✏ Editar",
                     on_click=State.admin_start_edit_product(product["id"]),
-                    size="1",
-                    color_scheme="blue",
-                    variant="soft",
+                    size="2",
+                    background="#2563EB",
+                    color="white",
+                    border_radius="6px",
+                    font_weight="700",
+                    cursor="pointer",
+                    _hover={"background": "#1D4ED8"},
                 ),
                 rx.button(
-                    "Eliminar",
+                    "✕ Eliminar",
                     on_click=State.admin_delete_product(product["id"]),
-                    size="1",
-                    color_scheme="red",
-                    variant="soft",
+                    size="2",
+                    background="#DC2626",
+                    color="white",
+                    border_radius="6px",
+                    font_weight="700",
+                    cursor="pointer",
+                    _hover={"background": "#B91C1C"},
                 ),
                 spacing="2",
             ),
@@ -383,19 +430,26 @@ def products_tab() -> rx.Component:
     return rx.vstack(
         rx.hstack(
             rx.hstack(
-                rx.heading("Productos", size="5", color="#1E293B"),
-                rx.badge(State.admin_products.length(), color_scheme="blue", radius="full"),
+                rx.heading("Productos", size="5", color="#0F172A", font_weight="800"),
+                rx.badge(
+                    State.admin_products.length(),
+                    background="#DBEAFE",
+                    color="#1E40AF",
+                    radius="full",
+                    font_weight="700",
+                ),
                 spacing="2",
                 align="center",
             ),
             rx.button(
                 "+ Agregar producto",
                 on_click=State.toggle_product_form,
-                size="2",
+                size="3",
                 background="#2563EB",
                 color="white",
                 border_radius="8px",
-                font_weight="600",
+                font_weight="700",
+                cursor="pointer",
                 _hover={"background": "#1D4ED8"},
             ),
             justify="between",
@@ -416,11 +470,11 @@ def products_tab() -> rx.Component:
             rx.table.root(
                 rx.table.header(
                     rx.table.row(
-                        rx.table.column_header_cell("ID"),
-                        rx.table.column_header_cell("Producto"),
-                        rx.table.column_header_cell("Precio"),
-                        rx.table.column_header_cell("Stock"),
-                        rx.table.column_header_cell("Acciones"),
+                        rx.table.column_header_cell(rx.text("ID", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Producto", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Precio", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Stock", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Acciones", color="#0F172A", font_weight="700")),
                     )
                 ),
                 rx.table.body(
@@ -431,6 +485,8 @@ def products_tab() -> rx.Component:
             ),
             overflow_x="auto",
             width="100%",
+            border="1.5px solid #CBD5E1",
+            border_radius="8px",
         ),
         spacing="4",
         width="100%",
@@ -441,10 +497,10 @@ def products_tab() -> rx.Component:
 
 def order_item_row(item: dict) -> rx.Component:
     return rx.hstack(
-        rx.text("·", color="#94A3B8"),
-        rx.text(item["name"], flex="1", font_size="0.85rem", color="#374151"),
-        rx.text("x", item["qty"], color="#64748B", font_size="0.85rem"),
-        rx.text("$", item["price"], font_weight="600", font_size="0.85rem", color="#2563EB"),
+        rx.text("·", color="#475569", font_weight="700"),
+        rx.text(item["name"], flex="1", font_size="0.88rem", color="#1E293B", font_weight="500"),
+        rx.text("x", item["qty"], color="#475569", font_size="0.88rem", font_weight="600"),
+        rx.text("$", item["price"], font_weight="700", font_size="0.88rem", color="#1D4ED8"),
         spacing="2",
         align="center",
         width="100%",
@@ -454,17 +510,17 @@ def order_item_row(item: dict) -> rx.Component:
 def status_badge(status) -> rx.Component:
     return rx.cond(
         status == "pending",
-        rx.badge("Pendiente", color_scheme="orange", radius="full", font_size="0.72rem"),
+        rx.badge("Pendiente", background="#FEF3C7", color="#92400E", radius="full", font_weight="700"),
         rx.cond(
             status == "confirmed",
-            rx.badge("Confirmado", color_scheme="blue", radius="full", font_size="0.72rem"),
+            rx.badge("Confirmado", background="#DBEAFE", color="#1E40AF", radius="full", font_weight="700"),
             rx.cond(
                 status == "shipped",
-                rx.badge("Enviado", color_scheme="purple", radius="full", font_size="0.72rem"),
+                rx.badge("Enviado", background="#EDE9FE", color="#5B21B6", radius="full", font_weight="700"),
                 rx.cond(
                     status == "delivered",
-                    rx.badge("Entregado", color_scheme="green", radius="full", font_size="0.72rem"),
-                    rx.badge("Cancelado", color_scheme="red", radius="full", font_size="0.72rem"),
+                    rx.badge("Entregado", background="#DCFCE7", color="#14532D", radius="full", font_weight="700"),
+                    rx.badge("Cancelado", background="#FEE2E2", color="#991B1B", radius="full", font_weight="700"),
                 ),
             ),
         ),
@@ -476,12 +532,13 @@ def admin_order_card(order: dict) -> rx.Component:
         rx.vstack(
             rx.hstack(
                 rx.vstack(
-                    rx.text(order["user_email"], font_weight="600", font_size="0.88rem"),
+                    rx.text(order["user_email"], font_weight="700", font_size="0.9rem", color="#0F172A"),
                     rx.text(
                         order["id"],
-                        font_size="0.7rem",
-                        color="#94A3B8",
+                        font_size="0.72rem",
+                        color="#475569",
                         font_family="monospace",
+                        font_weight="500",
                         max_width="200px",
                         overflow="hidden",
                         text_overflow="ellipsis",
@@ -492,7 +549,7 @@ def admin_order_card(order: dict) -> rx.Component:
                 ),
                 rx.hstack(
                     status_badge(order["status"]),
-                    rx.text("$", order["total"], font_weight="700", color="#2563EB"),
+                    rx.text("$", order["total"], font_weight="800", color="#1D4ED8", font_size="0.95rem"),
                     spacing="2",
                     align="center",
                 ),
@@ -505,20 +562,40 @@ def admin_order_card(order: dict) -> rx.Component:
             rx.cond(
                 State.expanded_order_id == order["id"],
                 rx.vstack(
-                    rx.divider(border_color="#E2E8F0"),
+                    rx.divider(border_color="#CBD5E1"),
                     rx.foreach(State.expanded_order_items, order_item_row),
                     rx.hstack(
-                        rx.button("Confirmar", on_click=State.admin_update_order_status(order["id"], "confirmed"), size="1", color_scheme="blue", variant="soft"),
-                        rx.button("Enviado", on_click=State.admin_update_order_status(order["id"], "shipped"), size="1", color_scheme="purple", variant="soft"),
-                        rx.button("Entregado", on_click=State.admin_update_order_status(order["id"], "delivered"), size="1", color_scheme="green", variant="soft"),
-                        rx.button("Cancelar", on_click=State.admin_update_order_status(order["id"], "cancelled"), size="1", color_scheme="red", variant="soft"),
+                        rx.button(
+                            "Confirmar",
+                            on_click=State.admin_update_order_status(order["id"], "confirmed"),
+                            size="2", background="#2563EB", color="white", border_radius="6px",
+                            font_weight="700", cursor="pointer",
+                        ),
+                        rx.button(
+                            "Enviado",
+                            on_click=State.admin_update_order_status(order["id"], "shipped"),
+                            size="2", background="#7C3AED", color="white", border_radius="6px",
+                            font_weight="700", cursor="pointer",
+                        ),
+                        rx.button(
+                            "Entregado",
+                            on_click=State.admin_update_order_status(order["id"], "delivered"),
+                            size="2", background="#16A34A", color="white", border_radius="6px",
+                            font_weight="700", cursor="pointer",
+                        ),
+                        rx.button(
+                            "Cancelar",
+                            on_click=State.admin_update_order_status(order["id"], "cancelled"),
+                            size="2", background="#DC2626", color="white", border_radius="6px",
+                            font_weight="700", cursor="pointer",
+                        ),
                         spacing="2",
                         flex_wrap="wrap",
                         padding_top="0.5em",
                     ),
-                    spacing="2",
+                    spacing="3",
                     width="100%",
-                    padding_top="0.5em",
+                    padding_top="0.75em",
                 ),
                 rx.box(),
             ),
@@ -526,12 +603,12 @@ def admin_order_card(order: dict) -> rx.Component:
             width="100%",
         ),
         background="white",
-        border="1px solid #E2E8F0",
-        border_radius="8px",
-        padding="0.85em 1em",
+        border="1.5px solid #CBD5E1",
+        border_radius="10px",
+        padding="1em 1.25em",
         width="100%",
-        _hover={"border_color": "#CBD5E1"},
-        transition="border-color 0.15s ease",
+        _hover={"border_color": "#2563EB", "box_shadow": "0 2px 8px rgba(37,99,235,0.1)"},
+        transition="all 0.15s ease",
     )
 
 
@@ -539,15 +616,16 @@ def filter_pill(slug: str, label: str) -> rx.Component:
     return rx.text(
         label,
         on_click=State.set_orders_status_filter(slug),
-        background=rx.cond(State.orders_status_filter == slug, "#2563EB", "#F1F5F9"),
-        color=rx.cond(State.orders_status_filter == slug, "white", "#475569"),
-        font_size="0.8rem",
-        font_weight="500",
-        padding_x="0.85em",
-        padding_y="0.35em",
+        background=rx.cond(State.orders_status_filter == slug, "#2563EB", "#E2E8F0"),
+        color=rx.cond(State.orders_status_filter == slug, "white", "#1E293B"),
+        font_size="0.85rem",
+        font_weight="700",
+        padding_x="1em",
+        padding_y="0.4em",
         border_radius="20px",
         cursor="pointer",
         white_space="nowrap",
+        border=rx.cond(State.orders_status_filter == slug, "2px solid #1D4ED8", "2px solid #CBD5E1"),
     )
 
 
@@ -555,16 +633,27 @@ def orders_tab() -> rx.Component:
     return rx.vstack(
         rx.hstack(
             rx.hstack(
-                rx.heading("Pedidos", size="5", color="#1E293B"),
-                rx.badge(State.admin_orders.length(), color_scheme="blue", radius="full"),
+                rx.heading("Pedidos", size="5", color="#0F172A", font_weight="800"),
+                rx.badge(
+                    State.admin_orders.length(),
+                    background="#DBEAFE",
+                    color="#1E40AF",
+                    radius="full",
+                    font_weight="700",
+                ),
                 spacing="2",
                 align="center",
             ),
             rx.button(
-                rx.icon("refresh-cw", size=14),
+                "Actualizar",
                 on_click=State.load_admin_orders,
-                size="1",
-                variant="ghost",
+                size="2",
+                background="#F1F5F9",
+                color="#1E293B",
+                border_radius="6px",
+                font_weight="700",
+                cursor="pointer",
+                border="1.5px solid #CBD5E1",
             ),
             justify="between",
             align="center",
@@ -591,22 +680,22 @@ def admin_user_row(user: dict) -> rx.Component:
     return rx.table.row(
         rx.table.cell(
             rx.vstack(
-                rx.text(user["email"], font_weight="500", font_size="0.85rem"),
+                rx.text(user["email"], font_weight="700", font_size="0.88rem", color="#0F172A"),
                 rx.text(
                     rx.cond(user["full_name"] != "", user["full_name"], "—"),
-                    font_size="0.78rem", color="#64748B",
+                    font_size="0.8rem", color="#475569", font_weight="500",
                 ),
                 spacing="0", align="start",
             ),
         ),
-        rx.table.cell(rx.text(user["profession"], font_size="0.82rem", color="#374151")),
-        rx.table.cell(rx.text(user["phone"], font_size="0.82rem", color="#64748B")),
-        rx.table.cell(rx.text(user["dni"], font_size="0.82rem", color="#64748B")),
+        rx.table.cell(rx.text(user["profession"], font_size="0.85rem", color="#1E293B", font_weight="500")),
+        rx.table.cell(rx.text(user["phone"], font_size="0.85rem", color="#1E293B", font_weight="500")),
+        rx.table.cell(rx.text(user["dni"], font_size="0.85rem", color="#1E293B", font_weight="500")),
         rx.table.cell(
             rx.cond(
                 user["is_admin"],
-                rx.badge("Admin", color_scheme="blue", radius="full"),
-                rx.badge("Cliente", color_scheme="gray", radius="full"),
+                rx.badge("Admin", background="#DBEAFE", color="#1E40AF", radius="full", font_weight="700"),
+                rx.badge("Cliente", background="#F1F5F9", color="#334155", radius="full", font_weight="600"),
             ),
         ),
     )
@@ -616,12 +705,28 @@ def users_tab() -> rx.Component:
     return rx.vstack(
         rx.hstack(
             rx.hstack(
-                rx.heading("Usuarios", size="5", color="#1E293B"),
-                rx.badge(State.admin_users.length(), color_scheme="blue", radius="full"),
+                rx.heading("Usuarios", size="5", color="#0F172A", font_weight="800"),
+                rx.badge(
+                    State.admin_users.length(),
+                    background="#DBEAFE",
+                    color="#1E40AF",
+                    radius="full",
+                    font_weight="700",
+                ),
                 spacing="2",
                 align="center",
             ),
-            rx.button(rx.icon("refresh-cw", size=14), on_click=State.load_admin_users, size="1", variant="ghost"),
+            rx.button(
+                "Actualizar",
+                on_click=State.load_admin_users,
+                size="2",
+                background="#F1F5F9",
+                color="#1E293B",
+                border_radius="6px",
+                font_weight="700",
+                cursor="pointer",
+                border="1.5px solid #CBD5E1",
+            ),
             justify="between",
             align="center",
             width="100%",
@@ -630,11 +735,11 @@ def users_tab() -> rx.Component:
             rx.table.root(
                 rx.table.header(
                     rx.table.row(
-                        rx.table.column_header_cell("Email / Nombre"),
-                        rx.table.column_header_cell("Profesión"),
-                        rx.table.column_header_cell("Teléfono"),
-                        rx.table.column_header_cell("DNI"),
-                        rx.table.column_header_cell("Rol"),
+                        rx.table.column_header_cell(rx.text("Email / Nombre", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Profesión", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Teléfono", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("DNI", color="#0F172A", font_weight="700")),
+                        rx.table.column_header_cell(rx.text("Rol", color="#0F172A", font_weight="700")),
                     )
                 ),
                 rx.table.body(rx.foreach(State.admin_users, admin_user_row)),
@@ -643,6 +748,8 @@ def users_tab() -> rx.Component:
             ),
             overflow_x="auto",
             width="100%",
+            border="1.5px solid #CBD5E1",
+            border_radius="8px",
         ),
         spacing="4",
         width="100%",
@@ -658,12 +765,12 @@ def admin() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.hstack(
-                        rx.icon("shield-check", size=22, color="#2563EB"),
-                        rx.heading("Panel de Administración", size="6", color="#1E293B"),
+                        rx.icon("shield-check", size=24, color="#2563EB"),
+                        rx.heading("Panel de Administración", size="6", color="#0F172A", font_weight="800"),
                         spacing="2",
                         align="center",
                     ),
-                    rx.text("Bienvenido, ", State.user_email, color="#64748B", font_size="0.85rem"),
+                    rx.text("Admin: ", State.user_email, color="#475569", font_size="0.85rem", font_weight="500"),
                     justify="between",
                     align="center",
                     width="100%",
@@ -671,24 +778,11 @@ def admin() -> rx.Component:
                 ),
                 rx.tabs.root(
                     rx.tabs.list(
-                        rx.tabs.trigger(
-                            rx.hstack(rx.icon("bar-chart", size=15), rx.text("Dashboard"), spacing="2", align="center"),
-                            value="dashboard",
-                        ),
-                        rx.tabs.trigger(
-                            rx.hstack(rx.icon("package", size=15), rx.text("Productos"), spacing="2", align="center"),
-                            value="products",
-                        ),
-                        rx.tabs.trigger(
-                            rx.hstack(rx.icon("shopping-cart", size=15), rx.text("Pedidos"), spacing="2", align="center"),
-                            value="orders",
-                        ),
-                        rx.tabs.trigger(
-                            rx.hstack(rx.icon("users", size=15), rx.text("Usuarios"), spacing="2", align="center"),
-                            value="users",
-                        ),
+                        rx.tabs.trigger("Dashboard", value="dashboard"),
+                        rx.tabs.trigger("Productos", value="products"),
+                        rx.tabs.trigger("Pedidos", value="orders"),
+                        rx.tabs.trigger("Usuarios", value="users"),
                         mb="4",
-                        flex_wrap="wrap",
                     ),
                     rx.tabs.content(dashboard_tab(), value="dashboard"),
                     rx.tabs.content(products_tab(), value="products"),
@@ -703,14 +797,16 @@ def admin() -> rx.Component:
             rx.center(
                 rx.vstack(
                     rx.icon("shield", size=44, color="#94A3B8"),
-                    rx.heading("Acceso denegado", size="5"),
-                    rx.text("Esta sección es solo para administradores.", color="#64748B"),
+                    rx.heading("Acceso denegado", size="5", color="#0F172A"),
+                    rx.text("Esta sección es solo para administradores.", color="#475569", font_weight="500"),
                     rx.button(
                         "Volver al inicio",
                         on_click=rx.redirect("/"),
                         background="#2563EB",
                         color="white",
                         border_radius="8px",
+                        font_weight="700",
+                        cursor="pointer",
                     ),
                     spacing="3",
                     align="center",
