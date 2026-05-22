@@ -631,7 +631,9 @@ class State(rx.State):
     def set_ep_stock(self, v: str): self.ep_stock = v
     def set_ep_description(self, v: str): self.ep_description = v
     def set_ep_image(self, v: str): self.ep_image = v
-    def set_ep_category(self, v: str): self.ep_category = v
+    def set_ep_category(self, v: str):
+        slug = next((k for k, lbl in CATEGORIES.items() if lbl == v), v)
+        self.ep_category = slug
     def set_ep_sizes(self, v: str): self.ep_sizes = v
 
     async def admin_save_edit_product(self):
@@ -676,7 +678,9 @@ class State(rx.State):
     def set_np_name(self, v: str): self.np_name = v
     def set_np_price(self, v: str): self.np_price = v
     def set_np_description(self, v: str): self.np_description = v
-    def set_np_category(self, v: str): self.np_category = v
+    def set_np_category(self, v: str):
+        slug = next((k for k, lbl in CATEGORIES.items() if lbl == v), v)
+        self.np_category = slug
     def set_np_sizes(self, v: str): self.np_sizes = v
     def set_np_image(self, v: str): self.np_image = v
     def set_np_stock(self, v: str): self.np_stock = v
