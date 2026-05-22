@@ -101,7 +101,7 @@ def order_summary_box() -> rx.Component:
             rx.cond(
                 State.order_error != "",
                 rx.hstack(
-                    rx.icon("alert-circle", size=15, color="#DC2626"),
+                    rx.icon("triangle-alert", size=15, color="#DC2626"),
                     rx.text(State.order_error, color="#DC2626", font_size="0.85rem"),
                     spacing="1",
                 ),
@@ -109,7 +109,7 @@ def order_summary_box() -> rx.Component:
             rx.cond(
                 State.mp_checkout_error != "",
                 rx.hstack(
-                    rx.icon("alert-circle", size=15, color="#DC2626"),
+                    rx.icon("triangle-alert", size=15, color="#DC2626"),
                     rx.text(State.mp_checkout_error, color="#DC2626", font_size="0.85rem"),
                     spacing="1",
                 ),
@@ -173,7 +173,7 @@ def cart() -> rx.Component:
                 State.order_success,
                 rx.center(
                     rx.vstack(
-                        rx.icon("check-circle", size=60, color="#16A34A"),
+                        rx.icon("circle-check", size=60, color="#16A34A"),
                         rx.heading("¡Pedido confirmado!", size="6", color="#1E293B"),
                         rx.text(
                             "Tu pedido fue procesado correctamente.",

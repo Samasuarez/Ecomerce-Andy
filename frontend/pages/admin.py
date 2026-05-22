@@ -453,7 +453,7 @@ def admin_order_card(order: dict) -> rx.Component:
                 State.expanded_order_id == order["id"],
                 rx.vstack(
                     rx.divider(border_color="#E2E8F0"),
-                    rx.foreach(order["items"], order_item_row),
+                    rx.foreach(State.expanded_order_items, order_item_row),
                     rx.hstack(
                         rx.text(
                             order["created_at"],

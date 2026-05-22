@@ -102,7 +102,7 @@ def login() -> rx.Component:
                         State.login_error != "",
                         rx.box(
                             rx.hstack(
-                                rx.icon("alert-circle", size=15, color="#DC2626"),
+                                rx.icon("triangle-alert", size=15, color="#DC2626"),
                                 rx.text(State.login_error, color="#DC2626", font_size="0.85rem"),
                                 spacing="2",
                                 align="center",

@@ -35,7 +35,7 @@ def editable_field(label: str, value, setter, field_key: str) -> rx.Component:
                     font_size="0.95rem",
                 ),
                 rx.button(
-                    rx.icon("edit", size=14),
+                    rx.icon("pencil", size=14),
                     on_click=State.start_edit(field_key),
                     size="1",
                     variant="ghost",
@@ -91,7 +91,7 @@ def profile_data_tab() -> rx.Component:
             ~State.profile_completed,
             rx.box(
                 rx.hstack(
-                    rx.icon("alert-circle", size=15, color="#D97706"),
+                    rx.icon("triangle-alert", size=15, color="#D97706"),
                     rx.text(
                         "Completá tu nombre para poder realizar pedidos.",
                         color="#92400E",

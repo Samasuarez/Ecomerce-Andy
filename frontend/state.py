@@ -113,6 +113,7 @@ class State(rx.State):
     # ── Admin pedidos ─────────────────────────────────────────────────── #
     orders_status_filter: str = "all"
     expanded_order_id: str = ""
+    expanded_order_items: list[dict] = []
 
     # ================================================================== #
     #  Computed vars                                                      #
@@ -599,7 +600,13 @@ class State(rx.State):
         self.orders_status_filter = status
 
     def toggle_expanded_order(self, order_id: str):
-        self.expanded_order_id = "" if self.expanded_order_id == order_id else order_id
+        if self.expanded_order_id == order_id:
+            self.expanded_order_id = ""
+            self.expanded_order_items = []
+        else:
+            self.expanded_order_id = order_id
+            order = next((o for o in self.admin_orders if o.get("id") == order_id), None)
+            self.expanded_order_items = order.get("items", []) if order else []
 
     def admin_start_edit_product(self, product_id: int):
         product = next((p for p in self.admin_products if p["id"] == product_id), None)
