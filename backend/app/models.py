@@ -2,6 +2,7 @@ from pydantic import BaseModel, field_validator
 from typing import List, Optional
 
 
+
 # ── Usuarios ─────────────────────────────────────────────────────────────── #
 
 class UserCreate(BaseModel):
@@ -119,3 +120,13 @@ class AdminStats(BaseModel):
     total_orders: int
     total_revenue: float
     pending_orders: int
+
+
+class ProductUpdate(BaseModel):
+    name: Optional[str] = None
+    price: Optional[float] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    sizes: Optional[List[str]] = None
+    image: Optional[str] = None
+    stock: Optional[int] = None

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from bson import ObjectId
 from ..database import get_db
-from ..models import UserPublic, OrderPublic, ProductModel, ProductCreate, AdminStats
+from ..models import UserPublic, OrderPublic, ProductModel, ProductCreate, ProductUpdate, AdminStats
 from .auth_router import get_current_user
 from ..notifications import send_order_notification
 
@@ -135,6 +135,19 @@ async def create_product(body: ProductCreate, _: dict = Depends(get_admin_user))
     }
     await db.products.insert_one(doc)
     return ProductModel(**{k: v for k, v in doc.items() if k != "_id"})
+
+
+@router.patch("/products/{product_id}", response_model=ProductModel)
+async def update_product(product_id: int, body: ProductUpdate, _: dict = Depends(get_admin_user)):
+    db = get_db()
+    update_data = {k: v for k, v in body.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(400, "No hay datos para actualizar")
+    result = await db.products.update_one({"id": product_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(404, "Producto no encontrado")
+    product = await db.products.find_one({"id": product_id}, {"_id": 0})
+    return ProductModel(**product)
 
 
 @router.delete("/products/{product_id}")

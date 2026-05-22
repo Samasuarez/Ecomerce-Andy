@@ -99,6 +99,21 @@ class State(rx.State):
     np_stock: str = "0"
     product_form_error: str = ""
 
+    # ── Admin editar producto ─────────────────────────────────────────── #
+    edit_product_id: int = 0
+    ep_name: str = ""
+    ep_price: str = ""
+    ep_stock: str = ""
+    ep_description: str = ""
+    ep_image: str = ""
+    ep_category: str = "ambos"
+    ep_sizes: str = ""
+    edit_form_error: str = ""
+
+    # ── Admin pedidos ─────────────────────────────────────────────────── #
+    orders_status_filter: str = "all"
+    expanded_order_id: str = ""
+
     # ================================================================== #
     #  Computed vars                                                      #
     # ================================================================== #
@@ -144,6 +159,12 @@ class State(rx.State):
     @rx.var
     def stat_revenue_fmt(self) -> str:
         return f"${self.stat_total_revenue:.2f}"
+
+    @rx.var
+    def filtered_admin_orders(self) -> list[dict]:
+        if self.orders_status_filter == "all":
+            return self.admin_orders
+        return [o for o in self.admin_orders if o.get("status") == self.orders_status_filter]
 
     # ================================================================== #
     #  Productos                                                          #
@@ -573,6 +594,73 @@ class State(rx.State):
                     self.admin_products = resp.json()
             except Exception:
                 pass
+
+    def set_orders_status_filter(self, status: str):
+        self.orders_status_filter = status
+
+    def toggle_expanded_order(self, order_id: str):
+        self.expanded_order_id = "" if self.expanded_order_id == order_id else order_id
+
+    def admin_start_edit_product(self, product_id: int):
+        product = next((p for p in self.admin_products if p["id"] == product_id), None)
+        if product:
+            self.edit_product_id = product_id
+            self.ep_name = product.get("name", "")
+            self.ep_price = str(product.get("price", ""))
+            self.ep_stock = str(product.get("stock", 0))
+            self.ep_description = product.get("description", "")
+            self.ep_image = product.get("image", "")
+            self.ep_category = product.get("category", "ambos")
+            self.ep_sizes = ",".join(product.get("sizes", []))
+            self.edit_form_error = ""
+            self.show_product_form = False
+
+    def admin_cancel_edit_product(self):
+        self.edit_product_id = 0
+        self.edit_form_error = ""
+
+    def set_ep_name(self, v: str): self.ep_name = v
+    def set_ep_price(self, v: str): self.ep_price = v
+    def set_ep_stock(self, v: str): self.ep_stock = v
+    def set_ep_description(self, v: str): self.ep_description = v
+    def set_ep_image(self, v: str): self.ep_image = v
+    def set_ep_category(self, v: str): self.ep_category = v
+    def set_ep_sizes(self, v: str): self.ep_sizes = v
+
+    async def admin_save_edit_product(self):
+        self.edit_form_error = ""
+        try:
+            price = float(self.ep_price)
+            stock = int(self.ep_stock) if self.ep_stock else 0
+        except ValueError:
+            self.edit_form_error = "Precio o stock inválido."
+            return
+        sizes = [s.strip() for s in self.ep_sizes.split(",") if s.strip()]
+        if not sizes:
+            sizes = ["Único"]
+        async with httpx.AsyncClient() as client:
+            try:
+                resp = await client.patch(
+                    f"{API_URL}/admin/products/{self.edit_product_id}",
+                    json={
+                        "name": self.ep_name,
+                        "price": price,
+                        "stock": stock,
+                        "description": self.ep_description,
+                        "image": self.ep_image,
+                        "category": self.ep_category,
+                        "sizes": sizes,
+                    },
+                    headers={"Authorization": f"Bearer {self.token}"},
+                )
+                if resp.status_code == 200:
+                    self.edit_product_id = 0
+                    await self.load_admin_products()
+                    await self.load_products()
+                else:
+                    self.edit_form_error = resp.json().get("detail", "Error al guardar.")
+            except Exception:
+                self.edit_form_error = "Error de conexión."
 
     def toggle_product_form(self):
         self.show_product_form = not self.show_product_form
