@@ -2,7 +2,7 @@ import reflex as rx
 import httpx
 import os
 
-API_URL = os.environ.get("API_URL", "http://localhost:8002")
+API_URL = os.environ.get("API_URL", "https://nurseshop-api.onrender.com")
 
 CATEGORIES = {
     "ambos": "Ambos",
