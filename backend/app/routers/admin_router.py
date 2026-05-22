@@ -4,6 +4,7 @@ from bson import ObjectId
 from ..database import get_db
 from ..models import UserPublic, OrderPublic, ProductModel, ProductCreate, AdminStats
 from .auth_router import get_current_user
+from ..notifications import send_order_notification
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -51,10 +52,15 @@ async def list_users(skip: int = 0, limit: int = 100, _: dict = Depends(get_admi
         UserPublic(
             id=str(u["_id"]),
             email=u.get("email", ""),
+            full_name=u.get("full_name", ""),
             first_name=u.get("first_name", ""),
             last_name=u.get("last_name", ""),
             phone=u.get("phone", ""),
             address=u.get("address", ""),
+            dni=u.get("dni", ""),
+            profession=u.get("profession", ""),
+            province=u.get("province", ""),
+            city=u.get("city", ""),
             is_admin=u.get("is_admin", False),
             created_at=u.get("created_at", ""),
         )
@@ -91,11 +97,14 @@ async def update_order_status(
     if status not in valid:
         raise HTTPException(400, f"Estado inválido. Opciones: {valid}")
     db = get_db()
-    result = await db.orders.update_one(
+    order = await db.orders.find_one({"_id": ObjectId(order_id)})
+    if not order:
+        raise HTTPException(404, "Pedido no encontrado")
+    await db.orders.update_one(
         {"_id": ObjectId(order_id)}, {"$set": {"status": status}}
     )
-    if result.matched_count == 0:
-        raise HTTPException(404, "Pedido no encontrado")
+    order["status"] = status
+    await send_order_notification(order, f"Estado actualizado: {status}")
     return {"ok": True}
 
 

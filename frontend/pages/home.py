@@ -20,7 +20,7 @@ def hero_section() -> rx.Component:
             rx.vstack(
                 rx.hstack(
                     rx.icon("cross", color="#93C5FD", size=24),
-                    rx.text("NurseShop", color="white", font_size="1.4rem", font_weight="800"),
+                    rx.text("EUCA by Andrea", color="white", font_size="1.4rem", font_weight="800"),
                     spacing="2", align="center",
                 ),
                 rx.heading(

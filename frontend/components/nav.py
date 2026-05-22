@@ -39,7 +39,7 @@ def navbar_searchbar() -> rx.Component:
             rx.hstack(
                 rx.icon("cross", color="#93C5FD", size=20),
                 rx.text(
-                    "NurseShop",
+                    "EUCA by Andrea",
                     color="white",
                     font_weight="800",
                     font_size="1.25rem",

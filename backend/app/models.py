@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import List, Optional
 
 
@@ -7,6 +7,18 @@ from typing import List, Optional
 class UserCreate(BaseModel):
     email: str
     password: str
+    full_name: str = ""
+    phone: str = ""
+    dni: str = ""
+    profession: str = ""
+    province: str = ""
+    city: str = ""
+    address: str = ""
+
+    @field_validator("email")
+    @classmethod
+    def email_lowercase(cls, v: str) -> str:
+        return v.strip().lower()
 
 
 class UserLogin(BaseModel):
@@ -17,19 +29,29 @@ class UserLogin(BaseModel):
 class UserPublic(BaseModel):
     id: str
     email: str
+    full_name: str = ""
     first_name: str = ""
     last_name: str = ""
     phone: str = ""
     address: str = ""
+    dni: str = ""
+    profession: str = ""
+    province: str = ""
+    city: str = ""
     is_admin: bool = False
     created_at: str = ""
 
 
 class UserUpdate(BaseModel):
+    full_name: str = ""
     first_name: str = ""
     last_name: str = ""
     phone: str = ""
     address: str = ""
+    dni: str = ""
+    profession: str = ""
+    province: str = ""
+    city: str = ""
 
 
 class TokenResponse(BaseModel):
@@ -82,6 +104,12 @@ class OrderPublic(BaseModel):
     total: float
     status: str
     created_at: str
+
+
+# ── Pagos ─────────────────────────────────────────────────────────────────── #
+
+class CreatePreferenceRequest(BaseModel):
+    order_id: str
 
 
 # ── Admin stats ───────────────────────────────────────────────────────────── #

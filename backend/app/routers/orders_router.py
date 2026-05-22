@@ -5,6 +5,7 @@ from bson import ObjectId
 from ..database import get_db
 from ..models import OrderCreate, OrderPublic
 from .auth_router import get_current_user
+from ..notifications import send_order_notification
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -40,6 +41,7 @@ async def create_order(body: OrderCreate, current_user: dict = Depends(get_curre
 
     result = await db.orders.insert_one(doc)
     doc["_id"] = result.inserted_id
+    await send_order_notification(doc, "Nuevo pedido")
     return _order_to_public(doc)
 
 

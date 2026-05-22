@@ -5,3 +5,6 @@ pymongo[srv]
 python-jose[cryptography]
 bcrypt==5.0.0
 python-dotenv==1.2.2
+mercadopago==2.3.0
+slowapi==0.1.9
+httpx==0.28.1

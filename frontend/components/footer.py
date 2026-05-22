@@ -15,7 +15,7 @@ def footer() -> rx.Component:
                 rx.vstack(
                     rx.hstack(
                         rx.icon("cross", color="#60A5FA", size=20),
-                        rx.text("NurseShop", color="white", font_weight="800", font_size="1.2rem"),
+                        rx.text("EUCA by Andrea", color="white", font_weight="800", font_size="1.2rem"),
                         spacing="2", align="center",
                     ),
                     rx.text("Tu tienda de confianza en\ninsumos y uniformes clínicos.",
@@ -55,7 +55,7 @@ def footer() -> rx.Component:
             ),
             rx.divider(border_color="#334155", margin_y="1.5em"),
             rx.hstack(
-                rx.text("© 2024 NurseShop — Todos los derechos reservados.",
+                rx.text("© 2025 EUCA by Andrea — Todos los derechos reservados.",
                         color="#64748B", font_size="0.8rem"),
                 rx.hstack(
                     rx.link("Instagram", href="/#", color="#64748B", font_size="0.8rem",

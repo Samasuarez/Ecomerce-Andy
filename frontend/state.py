@@ -47,11 +47,25 @@ class State(rx.State):
     login_error: str = ""
     register_mode: bool = False
 
+    # ── Campos extra para registro ────────────────────────────────────── #
+    reg_full_name: str = ""
+    reg_phone: str = ""
+    reg_dni: str = ""
+    reg_profession: str = ""
+    reg_province: str = ""
+    reg_city: str = ""
+    reg_address: str = ""
+
     # ── Perfil ────────────────────────────────────────────────────────── #
     first_name: str = ""
     last_name: str = ""
+    full_name: str = ""
     address: str = ""
     phone: str = ""
+    dni: str = ""
+    profession: str = ""
+    province: str = ""
+    city: str = ""
     editing_field: str | None = None
 
     # ── Pedidos del usuario ───────────────────────────────────────────── #
@@ -60,6 +74,10 @@ class State(rx.State):
     order_success: bool = False
     order_error: str = ""
     last_order_id: str = ""
+
+    # ── MercadoPago ───────────────────────────────────────────────────── #
+    mp_checkout_loading: bool = False
+    mp_checkout_error: str = ""
 
     # ── Admin stats ───────────────────────────────────────────────────── #
     stat_total_users: int = 0
@@ -109,7 +127,7 @@ class State(rx.State):
 
     @rx.var
     def profile_completed(self) -> bool:
-        return bool(self.first_name and self.last_name)
+        return bool(self.full_name or (self.first_name and self.last_name))
 
     @rx.var
     def cart_count(self) -> int:
@@ -248,15 +266,28 @@ class State(rx.State):
         self.register_mode = not self.register_mode
         self.login_error = ""
 
+    def set_reg_full_name(self, v: str): self.reg_full_name = v
+    def set_reg_phone(self, v: str): self.reg_phone = v
+    def set_reg_dni(self, v: str): self.reg_dni = v
+    def set_reg_profession(self, v: str): self.reg_profession = v
+    def set_reg_province(self, v: str): self.reg_province = v
+    def set_reg_city(self, v: str): self.reg_city = v
+    def set_reg_address(self, v: str): self.reg_address = v
+
     def _apply_user(self, data: dict):
         self.token = data["access_token"]
         user = data["user"]
         self.user_id = user["id"]
         self.user_email = user["email"]
+        self.full_name = user.get("full_name", "")
         self.first_name = user.get("first_name", "")
         self.last_name = user.get("last_name", "")
         self.phone = user.get("phone", "")
         self.address = user.get("address", "")
+        self.dni = user.get("dni", "")
+        self.profession = user.get("profession", "")
+        self.province = user.get("province", "")
+        self.city = user.get("city", "")
         self.is_admin = user.get("is_admin", False)
         self.is_logged_in = True
         self.login_email = ""
@@ -287,10 +318,27 @@ class State(rx.State):
             try:
                 resp = await client.post(
                     f"{API_URL}/auth/register",
-                    json={"email": self.login_email, "password": self.login_password},
+                    json={
+                        "email": self.login_email,
+                        "password": self.login_password,
+                        "full_name": self.reg_full_name,
+                        "phone": self.reg_phone,
+                        "dni": self.reg_dni,
+                        "profession": self.reg_profession,
+                        "province": self.reg_province,
+                        "city": self.reg_city,
+                        "address": self.reg_address,
+                    },
                 )
                 if resp.status_code == 200:
                     self._apply_user(resp.json())
+                    self.reg_full_name = ""
+                    self.reg_phone = ""
+                    self.reg_dni = ""
+                    self.reg_profession = ""
+                    self.reg_province = ""
+                    self.reg_city = ""
+                    self.reg_address = ""
                     return rx.redirect("/profile")
                 self.login_error = resp.json().get("detail", "Error al registrarse.")
             except Exception:
@@ -302,10 +350,15 @@ class State(rx.State):
         self.is_logged_in = False
         self.is_admin = False
         self.user_email = ""
+        self.full_name = ""
         self.first_name = ""
         self.last_name = ""
         self.phone = ""
         self.address = ""
+        self.dni = ""
+        self.profession = ""
+        self.province = ""
+        self.city = ""
         self.cart = []
         self.my_orders = []
 
@@ -313,10 +366,15 @@ class State(rx.State):
     #  Perfil                                                             #
     # ================================================================== #
 
+    def set_full_name(self, v: str): self.full_name = v
     def set_first_name(self, v: str): self.first_name = v
     def set_last_name(self, v: str): self.last_name = v
     def set_phone(self, v: str): self.phone = v
     def set_address(self, v: str): self.address = v
+    def set_dni(self, v: str): self.dni = v
+    def set_profession(self, v: str): self.profession = v
+    def set_province(self, v: str): self.province = v
+    def set_city(self, v: str): self.city = v
 
     def start_edit(self, field: str):
         self.editing_field = field
@@ -335,8 +393,17 @@ class State(rx.State):
             try:
                 await client.put(
                     f"{API_URL}/users/me",
-                    json={"first_name": self.first_name, "last_name": self.last_name,
-                          "phone": self.phone, "address": self.address},
+                    json={
+                        "full_name": self.full_name,
+                        "first_name": self.first_name,
+                        "last_name": self.last_name,
+                        "phone": self.phone,
+                        "address": self.address,
+                        "dni": self.dni,
+                        "profession": self.profession,
+                        "province": self.province,
+                        "city": self.city,
+                    },
                     headers={"Authorization": f"Bearer {self.token}"},
                 )
             except Exception:
@@ -393,6 +460,51 @@ class State(rx.State):
                     self.my_orders = resp.json()
             except Exception:
                 pass
+
+    # ================================================================== #
+    #  MercadoPago                                                        #
+    # ================================================================== #
+
+    async def go_to_mp_checkout(self):
+        if not self.is_logged_in:
+            return rx.redirect("/login")
+        if not self.cart:
+            return
+        self.mp_checkout_loading = True
+        self.mp_checkout_error = ""
+        async with httpx.AsyncClient() as client:
+            try:
+                items = [
+                    {"product_id": i["id"], "name": i["name"],
+                     "price": i["price"], "qty": i["qty"]}
+                    for i in self.cart
+                ]
+                order_resp = await client.post(
+                    f"{API_URL}/orders",
+                    json={"items": items},
+                    headers={"Authorization": f"Bearer {self.token}"},
+                )
+                if order_resp.status_code != 200:
+                    self.mp_checkout_error = "Error al crear el pedido."
+                    self.mp_checkout_loading = False
+                    return
+                order_id = order_resp.json()["id"]
+
+                pref_resp = await client.post(
+                    f"{API_URL}/payments/create-preference",
+                    json={"order_id": order_id},
+                    headers={"Authorization": f"Bearer {self.token}"},
+                )
+                if pref_resp.status_code == 200:
+                    init_point = pref_resp.json()["init_point"]
+                    self.cart = []
+                    self.mp_checkout_loading = False
+                    return rx.redirect(init_point)
+                else:
+                    self.mp_checkout_error = "Error al iniciar el pago. Intentá de nuevo."
+            except Exception:
+                self.mp_checkout_error = "Error de conexión."
+        self.mp_checkout_loading = False
 
     # ================================================================== #
     #  Admin                                                              #
